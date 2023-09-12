@@ -92,6 +92,11 @@ step "create-infrastructure" {
                   default = "#{Project.Azure.WebApp.Description}"
                 }
                 
+                variable "projectname" {
+                  type = "string"
+                  default = "#{Project.Name}"
+                }
+                
                 resource "azurerm_app_service_plan" "main" {
                   name = "${var.webappname}-service-plan"
                   location = "${var.location}"
@@ -126,12 +131,12 @@ step "create-infrastructure" {
                     environment = "${var.environment}"
                     owner       = "${var.owner}"
                     octopus-environment = "#{Octopus.Environment.Name}"
-                    octopus-role = "random-quotes-web"
+                    octopus-role = "${var.projectname}"
                     octopus-tenant = "#{Octopus.Deployment.Tenant.Name}"
                   }
                 }
                 EOT
-            Octopus.Action.Terraform.TemplateParameters = "{\"resourcegroupname\":\"#{Project.Azure.ResourceGroup.Name}\",\"webappname\":\"#{Project.Azure.WebApp.Name}\",\"databaseserver\":\"#{Project.Azure.Database.ServerName}\",\"databasename\":\"#{Project.Azure.Database.Name}\",\"environment\":\"#{Project.Environment}\",\"location\":\"#{Project.Tenant.Azure.Location}\",\"region\":\"#{Project.Tenant.Azure.Region}\",\"owner\":\"#{Tenant.Key}\",\"description\":\"#{Project.Azure.WebApp.Description}\"}"
+            Octopus.Action.Terraform.TemplateParameters = "{\"resourcegroupname\":\"#{Project.Azure.ResourceGroup.Name}\",\"webappname\":\"#{Project.Azure.WebApp.Name}\",\"databaseserver\":\"#{Project.Azure.Database.ServerName}\",\"databasename\":\"#{Project.Azure.Database.Name}\",\"environment\":\"#{Project.Environment}\",\"location\":\"#{Project.Tenant.Azure.Location}\",\"region\":\"#{Project.Tenant.Azure.Region}\",\"owner\":\"#{Tenant.Key}\",\"description\":\"#{Project.Azure.WebApp.Description}\",\"projectname\":\"#{Project.Name}\"}"
         }
         worker_pool_variable = "Project.WorkerPool"
     }
