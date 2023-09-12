@@ -56,63 +56,63 @@ variable "OctopusPrintVariables" {
     }
 }
 
-variable "RandomQuotes.Azure.Account" {
+variable "Project.Azure.Account" {
     type = "AzureAccount"
 
     value "tenants-azure-subscription" {}
 }
 
-variable "RandomQuotes.Azure.Database.ConnectionString" {
-    value "Server=#{RandomQuotes.Azure.Database.Server};Initial Catalog=#{RandomQuotes.Azure.Database.Name};Persist Security Info=False;User ID=#{RandomQuotes.Azure.Database.User};Password=#{RandomQuotes.Azure.Database.UserPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" {}
+variable "Project.Azure.Database.ConnectionString" {
+    value "Server=#{Project.Azure.Database.Server};Initial Catalog=#{Project.Azure.Database.Name};Persist Security Info=False;User ID=#{Project.Azure.Database.User};Password=#{Project.Azure.Database.UserPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" {}
 }
 
-variable "RandomQuotes.Azure.Database.Name" {
-    value "#{RandomQuotes.Tenant.Azure.Database.Name}" {}
+variable "Project.Azure.Database.Name" {
+    value "#{Project.Tenant.Azure.Database.Name}" {}
 }
 
-variable "RandomQuotes.Azure.Database.Server" {
-    value "tcp:#{RandomQuotes.Azure.Database.ServerName}.database.windows.net,1433" {}
+variable "Project.Azure.Database.Server" {
+    value "tcp:#{Project.Azure.Database.ServerName}.database.windows.net,1433" {}
 }
 
-variable "RandomQuotes.Azure.Database.ServerName" {
+variable "Project.Azure.Database.ServerName" {
     value "octo-demo-sc" {}
 }
 
-variable "RandomQuotes.Azure.Database.User" {
+variable "Project.Azure.Database.User" {
     value "octoadmin" {}
 }
 
-variable "RandomQuotes.Azure.Database.UserPassword" {
-    value "#{RandomQuotes.Tenant.Azure.Database.UserPassword}" {
+variable "Project.Azure.Database.UserPassword" {
+    value "#{Project.Tenant.Azure.Database.UserPassword}" {
         description = ""
     }
 }
 
-variable "RandomQuotes.Azure.ResourceGroup.Name" {
+variable "Project.Azure.ResourceGroup.Name" {
     value "demo.octopus.app" {}
 }
 
-variable "RandomQuotes.Azure.WebApp.Description" {
+variable "Project.Azure.WebApp.Description" {
     value "Random Quotes web app for #{Octopus.Deployment.Tenant.Name}" {}
 }
 
-variable "RandomQuotes.Azure.WebApp.Name" {
-    value "#{RandomQuotes.Tenant.Azure.WebApp.Name}" {}
+variable "Project.Azure.WebApp.Name" {
+    value "#{Project.Tenant.Azure.WebApp.Name}" {}
 }
 
-variable "RandomQuotes.Environment" {
+variable "Project.Environment" {
     value "#{Octopus.Environment.Name | ToLower}" {}
 }
 
-variable "RandomQuotes.Octopus.ApiKey" {
+variable "Project.Octopus.ApiKey" {
     value {}
 }
 
-variable "RandomQuotes.Terraform.StateKey" {
-    value "#{Tenant.Key}-#{RandomQuotes.Environment}" {}
+variable "Project.Terraform.StateKey" {
+    value "#{Tenant.Key}-#{Project.Environment}" {}
 }
 
-variable "RandomQuotes.WorkerPool" {
+variable "Project.WorkerPool" {
     type = "WorkerPool"
 
     value "azure-worker-pool" {}

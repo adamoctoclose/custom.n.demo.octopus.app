@@ -24,7 +24,7 @@ step "create-infrastructure" {
         action_type = "Octopus.TerraformApply"
         notes = "Use Terraform to create the Azure database and web app."
         properties = {
-            Octopus.Action.AzureAccount.Variable = "RandomQuotes.Azure.Account"
+            Octopus.Action.AzureAccount.Variable = "Project.Azure.Account"
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Terraform.AllowPluginDownloads = "True"
             Octopus.Action.Terraform.AzureAccount = "True"
@@ -38,7 +38,7 @@ step "create-infrastructure" {
                     resource_group_name  = "demo.octopus.app"
                     storage_account_name = "octodemotfstate"
                     container_name       = "terraform-state"
-                    key                  = "random-quotes-#{RandomQuotes.Terraform.StateKey}.terraform.tfstate"
+                    key                  = "random-quotes-#{Project.Terraform.StateKey}.terraform.tfstate"
                   }
                 }
                 
@@ -48,37 +48,37 @@ step "create-infrastructure" {
                 
                 variable "resourcegroupname" {
                   type = "string"
-                  default = "#{RandomQuotes.Azure.ResourceGroup.Name}"
+                  default = "#{Project.Azure.ResourceGroup.Name}"
                 }
                 
                 variable "webappname" {
                   type = "string"
-                  default = "#{RandomQuotes.Azure.WebApp.Name}"
+                  default = "#{Project.Azure.WebApp.Name}"
                 }
                 
                 variable "databaseserver" {
                   type = "string"
-                  default = "#{RandomQuotes.Azure.Database.ServerName}"
+                  default = "#{Project.Azure.Database.ServerName}"
                 }
                 
                 variable "databasename" {
                   type = "string"
-                  default = "#{RandomQuotes.Azure.Database.Name}"
+                  default = "#{Project.Azure.Database.Name}"
                 }
                 
                 variable "environment" {
                   type = "string"
-                  default = "#{RandomQuotes.Environment}"
+                  default = "#{Project.Environment}"
                 }
                 
                 variable "location" {
                   type = "string"
-                  default = "#{RandomQuotes.Tenant.Azure.Location}"
+                  default = "#{Project.Tenant.Azure.Location}"
                 }
                 
                 variable "region" {
                   type = "string"
-                  default = "#{RandomQuotes.Tenant.Azure.Region}"
+                  default = "#{Project.Tenant.Azure.Region}"
                 }
                 
                 variable "owner" {
@@ -88,7 +88,7 @@ step "create-infrastructure" {
                 
                 variable "description" {
                   type = "string"
-                  default = "#{RandomQuotes.Azure.WebApp.Description}"
+                  default = "#{Project.Azure.WebApp.Description}"
                 }
                 
                 resource "azurerm_app_service_plan" "main" {
@@ -130,9 +130,9 @@ step "create-infrastructure" {
                   }
                 }
                 EOT
-            Octopus.Action.Terraform.TemplateParameters = "{\"resourcegroupname\":\"#{RandomQuotes.Azure.ResourceGroup.Name}\",\"webappname\":\"#{RandomQuotes.Azure.WebApp.Name}\",\"databaseserver\":\"#{RandomQuotes.Azure.Database.ServerName}\",\"databasename\":\"#{RandomQuotes.Azure.Database.Name}\",\"environment\":\"#{RandomQuotes.Environment}\",\"location\":\"#{RandomQuotes.Tenant.Azure.Location}\",\"region\":\"#{RandomQuotes.Tenant.Azure.Region}\",\"owner\":\"#{Tenant.Key}\",\"description\":\"#{RandomQuotes.Azure.WebApp.Description}\"}"
+            Octopus.Action.Terraform.TemplateParameters = "{\"resourcegroupname\":\"#{Project.Azure.ResourceGroup.Name}\",\"webappname\":\"#{Project.Azure.WebApp.Name}\",\"databaseserver\":\"#{Project.Azure.Database.ServerName}\",\"databasename\":\"#{Project.Azure.Database.Name}\",\"environment\":\"#{Project.Environment}\",\"location\":\"#{Project.Tenant.Azure.Location}\",\"region\":\"#{Project.Tenant.Azure.Region}\",\"owner\":\"#{Tenant.Key}\",\"description\":\"#{Project.Azure.WebApp.Description}\"}"
         }
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
     }
 }
 
@@ -143,10 +143,10 @@ step "configure-web-app-pre-deploy" {
         action_type = "Octopus.AzurePowerShell"
         notes = "Use the Azure CLI to configure a few web app settings."
         properties = {
-            Octopus.Action.Azure.AccountId = "#{RandomQuotes.Azure.Account}"
+            Octopus.Action.Azure.AccountId = "#{Project.Azure.Account}"
             Octopus.Action.Script.ScriptBody = <<-EOT
-                $resourceGroup = $OctopusParameters["RandomQuotes.Azure.ResourceGroup.Name"]
-                $webApp = $OctopusParameters["RandomQuotes.Azure.WebApp.Name"]
+                $resourceGroup = $OctopusParameters["Project.Azure.ResourceGroup.Name"]
+                $webApp = $OctopusParameters["Project.Azure.WebApp.Name"]
                 
                 az webapp config appsettings set --settings WEBSITE_WEBDEPLOY_USE_SCM=false -n $webApp -g $resourceGroup | Out-Null
                 
@@ -157,7 +157,7 @@ step "configure-web-app-pre-deploy" {
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
     }
 }
 
@@ -177,15 +177,15 @@ step "deploy-azure-web-app" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "octopus-server-built-in"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "appsettings.json"
-            Octopus.Action.Package.PackageId = "RandomQuotes"
+            Octopus.Action.Package.PackageId = "Project"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
 
         packages {
             acquisition_location = "Server"
             feed = "octopus-server-built-in"
-            package_id = "RandomQuotes"
+            package_id = "Project"
             properties = {
                 SelectionMode = "immediate"
             }
@@ -200,10 +200,10 @@ step "configure-web-app-post-deploy" {
         action_type = "Octopus.AzurePowerShell"
         notes = "Use the Azure CLI to configure a few web app settings."
         properties = {
-            Octopus.Action.Azure.AccountId = "#{RandomQuotes.Azure.Account}"
+            Octopus.Action.Azure.AccountId = "#{Project.Azure.Account}"
             Octopus.Action.Script.ScriptBody = <<-EOT
-                $resourceGroup = $OctopusParameters["RandomQuotes.Azure.ResourceGroup.Name"]
-                $webApp = $OctopusParameters["RandomQuotes.Azure.WebApp.Name"]
+                $resourceGroup = $OctopusParameters["Project.Azure.ResourceGroup.Name"]
+                $webApp = $OctopusParameters["Project.Azure.WebApp.Name"]
                 
                 az webapp config set --resource-group "$resourceGroup" --name "$webapp" --startup-file "dotnet ./RandomQuotes.dll"
                 
@@ -213,7 +213,7 @@ step "configure-web-app-post-deploy" {
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
     }
 }
 
@@ -229,7 +229,7 @@ step "configure-sso" {
             Octopus.Action.Script.Syntax = "PowerShell"
         }
         tenant_tags = ["Feature Set/SSO"]
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
     }
 }
 
@@ -245,7 +245,7 @@ step "configure-custom-branding" {
             Octopus.Action.Script.Syntax = "PowerShell"
         }
         tenant_tags = ["Feature Set/Custom Branding"]
-        worker_pool_variable = "RandomQuotes.WorkerPool"
+        worker_pool_variable = "Project.WorkerPool"
     }
 }
 
