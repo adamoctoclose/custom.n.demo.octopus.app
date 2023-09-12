@@ -13,6 +13,7 @@ step "approve-deployment" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "True"
             Octopus.Action.Manual.Instructions = "Please enter notes below and either approve or cancel the deployment."
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
@@ -177,7 +178,7 @@ step "deploy-azure-web-app" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "octopus-server-built-in"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "appsettings.json"
-            Octopus.Action.Package.PackageId = "Project"
+            Octopus.Action.Package.PackageId = "RandomQuotes"
             OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = "Project.WorkerPool"
@@ -185,7 +186,7 @@ step "deploy-azure-web-app" {
         packages {
             acquisition_location = "Server"
             feed = "octopus-server-built-in"
-            package_id = "Project"
+            package_id = "RandomQuotes"
             properties = {
                 SelectionMode = "immediate"
             }
@@ -265,6 +266,7 @@ step "send-completion-notification" {
             Octopus.Action.Email.Body = "#{Octopus.Release.Notes}"
             Octopus.Action.Email.Subject = "Release #{Octopus.Release.Number} has been deployed to #{Octopus.Environment.Name} for #{Octopus.Deployment.Tenant.Name}"
             Octopus.Action.Email.To = "#{Octopus.Deployment.CreatedBy.EmailAddress}"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
