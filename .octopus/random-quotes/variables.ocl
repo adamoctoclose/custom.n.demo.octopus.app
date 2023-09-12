@@ -117,3 +117,7 @@ variable "Project.WorkerPool" {
 
     value "azure-worker-pool" {}
 }
+
+variable "Project.Name" {
+    value "inventory-tracking" {}
+}
