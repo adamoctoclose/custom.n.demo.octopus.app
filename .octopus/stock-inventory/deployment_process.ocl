@@ -135,7 +135,7 @@ step "create-infrastructure" {
                     octopus-tenant = "#{Octopus.Deployment.Tenant.Name}"
                   }
                 }
-                EOT
+                    EOT
             Octopus.Action.Terraform.TemplateParameters = "{\"resourcegroupname\":\"#{Project.Azure.ResourceGroup.Name}\",\"webappname\":\"#{Project.Azure.WebApp.Name}\",\"databaseserver\":\"#{Project.Azure.Database.ServerName}\",\"databasename\":\"#{Project.Azure.Database.Name}\",\"environment\":\"#{Project.Environment}\",\"location\":\"#{Project.Tenant.Azure.Location}\",\"region\":\"#{Project.Tenant.Azure.Region}\",\"owner\":\"#{Tenant.Key}\",\"description\":\"#{Project.Azure.WebApp.Description}\",\"projectname\":\"#{Project.Name}\"}"
         }
         worker_pool_variable = "Project.WorkerPool"
@@ -158,7 +158,7 @@ step "configure-web-app-pre-deploy" {
                 
                 Write-Host "WEBSITE_WEBDEPLOY_USE_SCM set to false"
                 Write-Host "Azure Web App ${webApp} configured"
-                EOT
+                    EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
@@ -214,7 +214,7 @@ step "configure-web-app-post-deploy" {
                 az webapp config set --resource-group "$resourceGroup" --name "$webapp" --startup-file "dotnet ./RandomQuotes.dll"
                 
                 Write-Host "Azure Web App ${webApp} configured"
-                EOT
+                    EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
