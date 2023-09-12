@@ -114,10 +114,10 @@ variable "Project.WorkerPool" {
     value "azure-worker-pool" {}
 }
 
-variable "Project.Name" {
-    value "inventory-tracking" {}
-}
-
 variable "Project.Azure.WebApp.Description" {
     value "#{Project.Name} web API for #{Octopus.Deployment.Tenant.Name}" {}
+}
+
+variable "Project.Name" {
+    value "stock-inventory" {}
 }
