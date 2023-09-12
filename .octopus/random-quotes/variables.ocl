@@ -92,10 +92,6 @@ variable "Project.Azure.ResourceGroup.Name" {
     value "demo.octopus.app" {}
 }
 
-variable "Project.Azure.WebApp.Description" {
-    value "Random Quotes web app for #{Octopus.Deployment.Tenant.Name}" {}
-}
-
 variable "Project.Azure.WebApp.Name" {
     value "#{Project.Tenant.Azure.WebApp.Name}" {}
 }
@@ -120,4 +116,8 @@ variable "Project.WorkerPool" {
 
 variable "Project.Name" {
     value "inventory-tracking" {}
+}
+
+variable "Project.Azure.WebApp.Description" {
+    value "#{Project.Name} web API for #{Octopus.Deployment.Tenant.Name}" {}
 }
