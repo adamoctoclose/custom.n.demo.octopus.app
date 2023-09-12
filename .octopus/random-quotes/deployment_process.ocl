@@ -170,7 +170,7 @@ step "configure-web-app-pre-deploy" {
 step "deploy-azure-web-app" {
     name = "Deploy Azure Web App"
     properties = {
-        Octopus.Action.TargetRoles = "random-quotes-web"
+        Octopus.Action.TargetRoles = "tp-inventory-tracking-api"
     }
 
     action {
