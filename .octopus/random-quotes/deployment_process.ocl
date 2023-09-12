@@ -39,7 +39,7 @@ step "create-infrastructure" {
                     resource_group_name  = "demo.octopus.app"
                     storage_account_name = "octodemotfstate"
                     container_name       = "terraform-state"
-                    key                  = "random-quotes-#{Project.Terraform.StateKey}.terraform.tfstate"
+                    key                  = "#{Project.Name}-#{Project.Terraform.StateKey}.terraform.tfstate"
                   }
                 }
                 
